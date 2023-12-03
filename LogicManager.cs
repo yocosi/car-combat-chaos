@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class LogicManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject audioMenu;
     public Text score;
+    public Text highestScore;
     public int playerScore;
     private bool isWin;
     private bool isOnPause;
@@ -21,6 +23,7 @@ public class LogicManager : MonoBehaviour
     {
         isWin = false;
         isOnPause = false;
+        highestScore.text = PlayerPrefs.GetInt("playerHighestScore", 0).ToString();
     }
 
     private void Update()
@@ -82,6 +85,11 @@ public class LogicManager : MonoBehaviour
     public void GameOver()
     {
         gameOverScreen.SetActive(true);
+        if (PlayerPrefs.GetInt("playerHighestScore") < playerScore)
+        {
+            PlayerPrefs.SetInt("playerHighestScore", playerScore);
+            PlayerPrefs.Save();
+        }
     }
 
     public void Win()
@@ -94,8 +102,10 @@ public class LogicManager : MonoBehaviour
     {
         playerScore += scoreToAdd;
         score.text = playerScore.ToString();
-        if (playerScore == 15)
+        if (playerScore == 100)
         {
+            PlayerPrefs.SetInt("playerHighestScore", 100);
+            PlayerPrefs.Save();
             Win();
         }
     }
